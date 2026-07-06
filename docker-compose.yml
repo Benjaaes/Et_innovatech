@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: db_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: innovatech
+      MYSQL_PASSWORD: innovatechpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - innovatech-network
+
+  backend-ventas:
+    build:
+      context: ./back-Ventas_SpringBoot/Springboot-API-REST
+      dockerfile: Dockerfile
+    container_name: backend-ventas
+    environment:
+      DB_ENDPOINT: db
+      DB_PORT: 3306
+      DB_NAME: ventas_db
+      DB_USERNAME: innovatech
+      DB_PASSWORD: innovatechpassword
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - innovatech-network
+
+  backend-despachos:
+    build:
+      context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
+      dockerfile: Dockerfile
+    container_name: backend-despachos
+    environment:
+      DB_ENDPOINT: db
+      DB_PORT: 3306
+      DB_NAME: despachos_db
+      DB_USERNAME: innovatech
+      DB_PASSWORD: innovatechpassword
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    networks:
+      - innovatech-network
+
+  frontend:
+    build:
+      context: ./front_despacho
+      dockerfile: Dockerfile
+    container_name: frontend-react
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend-ventas
+      - backend-despachos
+    networks:
+      - innovatech-network
+
+networks:
+  innovatech-network:
+    driver: bridge
+
+volumes:
+  db_data:

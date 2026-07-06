@@ -1,0 +1,39 @@
+{
+  "family": "innovatech-despachos-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::325826732988:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::325826732988:role/LabRole",
+  "containerDefinitions": [
+    {
+      "name": "innovatech-despachos",
+      "image": "325826732988.dkr.ecr.us-east-1.amazonaws.com/innovatech-despachos:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8081,
+          "hostPort": 8081,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "DB_ENDPOINT", "value": "innovatech-db.cr5yjpwkhd1z.us-east-1.rds.amazonaws.com" },
+        { "name": "DB_PORT", "value": "3306" },
+        { "name": "DB_NAME", "value": "despachos_db" },
+        { "name": "DB_USERNAME", "value": "innovatech" },
+        { "name": "DB_PASSWORD", "value": "innovatechpassword" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/innovatech-despachos",
+          "awslogs-region": "us-east-1",
+          "awslogs-create-group": "true",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
