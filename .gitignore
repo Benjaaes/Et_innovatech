@@ -1,0 +1,18 @@
+# Node.js (Frontend)
+node_modules/
+dist/
+build/
+.env
+
+# Java / Spring Boot (Backend)
+target/
+*.jar
+*.war
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+
+# IDEs y SO
+.idea/
+.vscode/
+*.swp
+.DS_Store
